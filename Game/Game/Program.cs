@@ -11,12 +11,12 @@ namespace Game
         {
             Setup();
 
-            Console.WriteLine("\nPress the Enter key to exit the application...\n");
-            Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
-            Handle(Console.ReadLine());
-
-            Console.WriteLine("Terminating the application...");
+            while (true)
+            {
+                Handle(Console.ReadKey());
+            }
         }
+
 
         //Bootstrap game
         public static void Setup()
@@ -26,7 +26,7 @@ namespace Game
             gameloop = new Timer();
 
             //On timed event
-            gameloop.Elapsed += Draw;
+            gameloop.Elapsed += Loop;
 
             //Tickrate, Lower is faster
             gameloop.Interval = 16.6666666667;
@@ -34,25 +34,27 @@ namespace Game
             gameloop.Enabled = true;
         }
 
-        //Will be called 60 times a second
-        public static void Draw(object sender, ElapsedEventArgs e)
+        //Write to console
+        public static void Loop(object sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
-                          e.SignalTime);
+            Console.Clear();
         }
 
-        public static void Handle(string Input)
+        //Handle key input
+        private static void Handle(ConsoleKeyInfo cki)
         {
-            switch (Input)
+            String input = cki.Key.ToString().ToLower();
+
+            switch (input)
             {
-                case "Q":
+                case "q":
                     gameloop.Stop();
                     gameloop.Dispose();
-                    Console.WriteLine("Exiting...");
+                    
                     break;
-                case "R":
+
+                case "r":
                     Setup();
-                    Console.WriteLine("Reseting");
                     break;
             }
         }
