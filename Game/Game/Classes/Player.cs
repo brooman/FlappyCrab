@@ -3,20 +3,22 @@ namespace Game.Classes
 {
     public class Player
     {
-        private int YPos { get; set; }
+        public int YPos { get; private set; }
+        public int XPos { get; }
         private readonly int Height = 2;
         private readonly int Width = 2;
 
         public Player()
         {
             this.YPos = Console.WindowHeight / 2;
+            this.XPos = 40;
         }
 
         public void Show()
         {
             for (int i = 0; i < this.Height; i++)
             {
-                Console.SetCursorPosition(40, this.YPos + i);
+                Console.SetCursorPosition(this.XPos, this.YPos + i);
 
                 for (int j = 0; j < this.Width; j++)
                 {

@@ -32,7 +32,7 @@ namespace Game
             for (int i = 0; i < 4; i++)
             {
                 //Set the spacing between pillars
-                int upperHeight = random.Next(15, 30);
+                int upperHeight = random.Next(10, 30);
                 int spacing = random.Next(10, 15);
 
                 int xpos = Console.WindowWidth + (50 * i);
@@ -52,26 +52,32 @@ namespace Game
         //Write to console
         public void Loop(object sender, ElapsedEventArgs e)
         {
+            Console.Clear();
+
             if (this.running)
             {
-                //Update everything
-                foreach(var pillar in this.pillars)
+
+                this.running = this.player.Update();
+
+                foreach (var pillar in this.pillars)
                 {
+
                     if (pillar.Update())
                     {
                         score++;
                     }
+
+                    if (pillar.CheckHit(this.player))
+                    {
+                        this.running = false;
+                        break;
+                    }
                 }
-
-                this.running = this.player.Update();
-
-                //Start drawing
-                Console.Clear();
 
                 //Draw Score
                 Console.SetCursorPosition(Console.WindowWidth - 10, 0);
                 Console.Write(this.score);
-            
+
                 //Draw Ground
                 Console.SetCursorPosition(0, Console.WindowHeight - 3);
                 Console.Write(new String('X', Console.WindowWidth));
@@ -85,9 +91,9 @@ namespace Game
                     pillar.Show();
                 }
 
+
                 //Reset cursor position
                 Console.SetCursorPosition(Console.WindowWidth, Console.WindowHeight);
-
             }
             else
             {
@@ -97,6 +103,8 @@ namespace Game
                 Console.WriteLine("Press R to play again");
             }
         }
+
+        //Write to console
 
         public void Dispose()
         {
