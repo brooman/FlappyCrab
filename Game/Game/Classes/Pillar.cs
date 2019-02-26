@@ -57,10 +57,10 @@ namespace Game.Classes
         public bool CheckHit(Player player)
          {
             //Check if player and pillar has same XPos
-            if (Enumerable.Range(this.XPos, this.XPos + this.Width - 1).Contains(player.XPos))
+            if (Enumerable.Range(this.XPos, this.Width).Contains(player.XPos))
             {
                 //Check if player is inside the pillar
-                if(Enumerable.Range(this.YPos, this.YPos + this.Height - 1).Contains(player.YPos))
+                if(Enumerable.Range(this.YPos, this.Height).Contains(player.YPos))
                 {
                     Console.Clear();
                     Console.WriteLine($"Pillar Width: {this.XPos} - {this.XPos + this.Width - 1}");
