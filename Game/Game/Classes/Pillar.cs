@@ -15,7 +15,7 @@ namespace Game.Classes
             this.XPos = XPos;
             this.YPos = YPos;
             this.Height = Height;
-            this.Width = 4;
+            this.Width = 3;
         }
 
         public bool Update()
@@ -62,15 +62,7 @@ namespace Game.Classes
                 //Check if player is inside the pillar
                 if(Enumerable.Range(this.YPos, this.Height).Contains(player.YPos))
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Pillar Width: {this.XPos} - {this.XPos + this.Width - 1}");
-                    Console.WriteLine($"Pillar Height: {this.YPos} - {this.YPos + this.Height - 1}");
-
-                    Console.WriteLine();
-                    Console.WriteLine($"Player X: {player.XPos}");
-                    Console.WriteLine($"Player Y: {player.YPos}");
-
-                       return true;
+                        return true;
                 }
             }
 

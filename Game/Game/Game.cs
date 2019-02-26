@@ -18,15 +18,6 @@ namespace Game
 
         public Game()
         {
-            gameloop = new Timer();
-
-            //On timed event
-            gameloop.Elapsed += Loop;
-
-            //Tickrate, Lower is faster
-            gameloop.Interval = 60;
-
-            gameloop.Enabled = true;
 
             Random random = new Random();
             for (int i = 0; i < 4; i++)
@@ -47,6 +38,12 @@ namespace Game
                     upperHeight + spacing
                 ));
             }
+
+            //Start gameloop
+            gameloop = new Timer();
+            gameloop.Elapsed += Loop;
+            gameloop.Interval = 60;
+            gameloop.Enabled = true;
         }
 
         //Write to console
@@ -80,7 +77,7 @@ namespace Game
 
                 //Draw Ground
                 Console.SetCursorPosition(0, Console.WindowHeight - 3);
-                Console.Write(new String('X', Console.WindowWidth));
+                Console.Write(new String('_', Console.WindowWidth));
 
                 //Draw Player
                 this.player.Show();
