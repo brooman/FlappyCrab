@@ -5,13 +5,15 @@ namespace Game.Classes
 {
     public class Pillar
     {
+        public readonly string Type;
         public int XPos { get; private set; }
-        public int YPos { get; }
-        public int Height { get; }
+        public int YPos { get; private set; }
+        public int Height { get; private set; }
         public int Width { get; }
 
-        public Pillar(int Height, int XPos, int YPos)
+        public Pillar(int Height, int XPos, int YPos, string Type)
         {
+            this.Type = Type;
             this.XPos = XPos;
             this.YPos = YPos;
             this.Height = Height;
@@ -28,6 +30,12 @@ namespace Game.Classes
 
             this.XPos -= 1;
             return false;
+        }
+
+        public void Rebuild(int Height, int YPos)
+        {
+            this.Height = Height;
+            this.YPos = YPos;
         }
 
         public void Show()

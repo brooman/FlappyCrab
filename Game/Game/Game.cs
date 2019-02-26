@@ -10,6 +10,7 @@ namespace Game
     {
         private Timer gameloop;
         private Boolean running = true;
+        private Random random = new Random();
 
         public Player player = new Player();
         private List<Pillar> pillars = new List<Pillar>();
@@ -18,8 +19,6 @@ namespace Game
 
         public Game()
         {
-
-            Random random = new Random();
             for (int i = 0; i < 4; i++)
             {
                 //Set the spacing between pillars
@@ -29,13 +28,14 @@ namespace Game
                 int xpos = Console.WindowWidth + (50 * i);
 
                 //Upper pillar
-                pillars.Add(new Pillar(upperHeight, xpos, 0));
+                pillars.Add(new Pillar(upperHeight, xpos, 0, "Upper"));
 
                 //Lower pillar
                 pillars.Add(new Pillar(
                     Console.WindowHeight - upperHeight - spacing,
                     xpos,
-                    upperHeight + spacing
+                    upperHeight + spacing,
+                    "Lower"
                 ));
             }
 
@@ -56,11 +56,26 @@ namespace Game
 
                 this.running = this.player.Update();
 
-                foreach (var pillar in this.pillars)
+                for(var i = 0; i < this.pillars.Count; i++) 
                 {
+                    Pillar pillar = this.pillars[i];
 
-                    if (pillar.Update())
+                    if (pillar.Update() && pillar.Type == "Upper")
                     {
+                        //Generate new values
+                        int upperHeight = random.Next(10, 30);
+                        int spacing = random.Next(10, 15);
+
+                        //Rebuild upper pillar
+                        pillar.Rebuild(upperHeight, 0);
+
+                        //Rebuild lower pillar
+                        this.pillars[i + 1].Rebuild(
+                            Console.WindowHeight - upperHeight - spacing,
+                            upperHeight + spacing
+                        );
+
+                        //Increase score
                         score++;
                     }
 
