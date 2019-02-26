@@ -52,7 +52,7 @@ namespace Game.Classes
 
                         for(int j = 0; j < this.Width; j++)
                         {
-                            Console.Write("\ud83d\udd25");
+                            Console.Write("█");
                         }
 
                     }
