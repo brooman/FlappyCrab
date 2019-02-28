@@ -2,28 +2,37 @@
 using System.Timers;
 using Game.Classes;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 namespace Game
 {
     public class Game : IDisposable
     {
         private Timer gameloop;
+        
+        private Int64 gameTick;
+        private Int64 latestHit;
+        
         private Boolean running = true;
         private Random random = new Random();
 
         public Player player = new Player();
         private List<Pillar> pillars = new List<Pillar>();
 
+        private int latestScore = 0;
         private int score = 0;
-
+        
+        private ProcessStartInfo info;
+        private Process _shell;
+        private bool MusicPlaying = false;
+        
         public Game()
         {
             for (int i = 0; i < 4; i++)
             {
                 //Set the spacing between pillars
-                int upperHeight = random.Next(10, 30);
-                int spacing = random.Next(10, 15);
+                int upperHeight = random.Next(20, 30);
+                int spacing = random.Next(6, 9);
 
                 int xpos = Console.WindowWidth + (50 * i);
 
@@ -44,27 +53,36 @@ namespace Game
             gameloop.Elapsed += Loop;
             gameloop.Interval = 60;
             gameloop.Enabled = true;
+            gameTick = 0;
+            latestHit = Int64.MinValue;
+            Console.CursorVisible = false;
         }
 
         //Write to console
         public void Loop(object sender, ElapsedEventArgs e)
         {
             Console.Clear();
-
+            gameTick++;
+            
             if (this.running)
             {
 
                 this.running = this.player.Update();
 
-                for(var i = 0; i < this.pillars.Count; i++) 
+                if (!this.player.Shielded)
+                {
+                    this.player.ShieldCharge++;
+                }
+                
+                for (var i = 0; i < this.pillars.Count; i++)
                 {
                     Pillar pillar = this.pillars[i];
 
                     if (pillar.Update() && pillar.Type == "Upper")
                     {
                         //Generate new values
-                        int upperHeight = random.Next(10, 30);
-                        int spacing = random.Next(10, 15);
+                        int upperHeight = random.Next(20, 30);
+                        int spacing = random.Next(6, 9);
 
                         //Rebuild upper pillar
                         pillar.Rebuild(upperHeight, 0);
@@ -79,10 +97,44 @@ namespace Game
                         score++;
                     }
 
+
+
                     if (pillar.CheckHit(this.player))
                     {
-                        this.running = false;
-                        break;
+                        //1 sec CD
+                        if (this.player.Shielded)
+                        {
+                            if (this.gameTick > this.latestHit + 400)
+                            {
+                                this.latestHit = this.gameTick;
+
+                                this.player.Shielded = false;
+                                
+                                this.StopMusic();
+                            }
+                        }
+                        else
+                        {
+                            this.running = false;
+                            break;
+                        }
+                    }
+                }
+
+
+
+                if(this.score % 5 == 0 && this.score > this.latestScore)
+                {
+                    this.latestScore = this.score;
+                    foreach (var pillar in pillars)
+                    {
+                        if (pillar.Speed < 4)
+                        {
+                            pillar.Speed++;
+                        } else if (pillar.Width < 8)
+                        {
+                            pillar.Width++;
+                        }
                     }
                 }
 
@@ -102,8 +154,27 @@ namespace Game
                 {
                     pillar.Show();
                 }
+                
+                //Show shield status
+                Console.Write("Shield (d): ");
+                if (this.player.ShieldCharge >= 200)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Ready");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Charging {(this.player.ShieldCharge / 2)}");
+                }
+                Console.ResetColor();
 
-
+                if (this.player.Shielded)
+                {
+                    this.PlayMusic();
+                    Console.WriteLine("Shielded");
+                    Console.ForegroundColor = GetRandomConsoleColor();
+                }
                 //Reset cursor position
                 Console.SetCursorPosition(Console.WindowWidth, Console.WindowHeight);
             }
@@ -121,6 +192,38 @@ namespace Game
         public void Dispose()
         {
             gameloop.Dispose();
+        }
+        
+        private ConsoleColor GetRandomConsoleColor()
+        {
+            var consoleColors = Enum.GetValues(typeof(ConsoleColor));
+            return (ConsoleColor)consoleColors.GetValue(random.Next(consoleColors.Length));
+        }
+        
+        public void PlayMusic()
+        {
+            if (!this.MusicPlaying)
+            {
+                this.info = new ProcessStartInfo();
+
+                info.FileName = "afplay";
+                info.Arguments = "star.wav";
+
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
+
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+
+                _shell = Process.Start(info);
+                this.MusicPlaying = true;
+            }
+        }
+
+        public void StopMusic()
+        {
+            _shell.Kill();
+            this.MusicPlaying = false;
         }
     }
 }

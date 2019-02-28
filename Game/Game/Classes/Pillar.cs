@@ -9,8 +9,10 @@ namespace Game.Classes
         public int XPos { get; private set; }
         public int YPos { get; private set; }
         public int Height { get; private set; }
-        public int Width { get; }
-
+        public int Width { get; set; }
+        
+        public int Speed { get; set; }
+   
         public Pillar(int Height, int XPos, int YPos, string Type)
         {
             this.Type = Type;
@@ -18,6 +20,7 @@ namespace Game.Classes
             this.YPos = YPos;
             this.Height = Height;
             this.Width = 3;
+            this.Speed = 1;
         }
 
         public bool Update()
@@ -28,7 +31,7 @@ namespace Game.Classes
                 return true;
             }
 
-            this.XPos -= 1;
+            this.XPos -= this.Speed;
             return false;
         }
 

@@ -5,13 +5,17 @@ namespace Game.Classes
     {
         public int YPos { get; private set; }
         public int XPos { get; }
-        private readonly int Height = 2;
-        private readonly int Width = 2;
+        private readonly int Height = 1;
+        private readonly int Width = 1;
+        public bool Shielded { get; set; }
+        public int ShieldCharge { get; set; }
 
         public Player()
         {
             this.YPos = Console.WindowHeight / 2;
             this.XPos = 40;
+            this.ShieldCharge = 0;
+            this.Shielded = false;
         }
 
         public void Show()
@@ -46,6 +50,15 @@ namespace Game.Classes
             if(this.YPos > 5)
             {
                 this.YPos -= 5;
+            }
+        }
+
+        public void Shield()
+        {
+            if (this.ShieldCharge >= 200)
+            {
+                this.Shielded = true;
+                this.ShieldCharge = 0;       
             }
         }
     }

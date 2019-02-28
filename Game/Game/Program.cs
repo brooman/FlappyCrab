@@ -25,6 +25,9 @@ namespace Game
                     Game.Dispose();
                     Game = new Game();
                     break;
+                case "d":
+                    Game.player.Shield();
+                    break;
                 case "spacebar":
                     Game.player.Jump();
                     break;
