@@ -102,9 +102,10 @@ namespace Game
                     if (pillar.CheckHit(this.player))
                     {
                         //1 sec CD
+                        // This bugs out on first level with no speed increase.
                         if (this.player.Shielded)
                         {
-                            if (this.gameTick > this.latestHit + 400)
+                            if (this.gameTick > this.latestHit + 500)
                             {
                                 this.latestHit = this.gameTick;
 
