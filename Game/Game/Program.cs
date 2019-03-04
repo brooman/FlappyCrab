@@ -4,11 +4,14 @@ namespace Game
 {
     class MainClass
     {
-        private static Game Game = new Game();
+        private static Game Game;
+        private static bool gameLive = false;
 
         public static void Main(string[] args)
         {
-            while (true)
+            Console.WriteLine("New game. Press ENTER to launch!");
+            Handle(Console.ReadKey());
+            while (gameLive)
             {
                 Handle(Console.ReadKey());
             }
@@ -30,6 +33,14 @@ namespace Game
                     break;
                 case "spacebar":
                     Game.player.Jump();
+                    break;
+                case "enter":
+                    if (!gameLive)
+                    {
+                        gameLive = true;
+                        Game = new Game();
+                        break;
+                    }
                     break;
             }
         }

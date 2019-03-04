@@ -3,6 +3,9 @@ using System.Timers;
 using Game.Classes;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Media;
+using System.Reflection;
 
 namespace Game
 {
@@ -24,6 +27,7 @@ namespace Game
         
         private ProcessStartInfo info;
         private Process _shell;
+        
         private bool MusicPlaying = false;
         
         public Game()
@@ -54,7 +58,7 @@ namespace Game
             gameloop.Interval = 60;
             gameloop.Enabled = true;
             gameTick = 0;
-            latestHit = Int64.MinValue;
+            latestHit = 0;
             Console.CursorVisible = false;
         }
 
@@ -63,6 +67,7 @@ namespace Game
         {
             Console.Clear();
             gameTick++;
+            Console.WriteLine(gameTick);
             
             if (this.running)
             {
@@ -105,7 +110,7 @@ namespace Game
                         // This bugs out on first level with no speed increase.
                         if (this.player.Shielded)
                         {
-                            if (this.gameTick > this.latestHit + 500)
+                            if (this.gameTick > this.latestHit + ((this.score > 4) ? 200 : 250))
                             {
                                 this.latestHit = this.gameTick;
 
@@ -217,9 +222,11 @@ namespace Game
                 info.RedirectStandardError = true;
 
                 _shell = Process.Start(info);
+                
                 this.MusicPlaying = true;
             }
         }
+        
 
         public void StopMusic()
         {
