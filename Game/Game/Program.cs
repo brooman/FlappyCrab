@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Game
 {
@@ -6,13 +7,19 @@ namespace Game
     {
         private static Game Game;
 
+        [DllImport("libc")]
+        private static extern int system(string exec);
+
         public static void Main(string[] args)
         {
             //Hide cursor
             Console.CursorVisible = false;
+            system(@"printf '\e[8;70;200t'");
 
-            //Init game
-            Game = new Game();
+            Game = new Game()
+            {
+                _running = -1
+            };
 
             while (true)
             {
@@ -23,22 +30,23 @@ namespace Game
         //Handle key input
         private static void Handle(ConsoleKeyInfo cki)
         {
-            //Start game on any key input
-            if(Game._running == -1)
-            {
-                Game._running = 0;
-                return;
-            }
-
             //Parse & handle key input
             String input = cki.Key.ToString().ToLower();
+
+            //Redirect all keys to "R" on start screen
+            if (Game._running == -1)
+            {
+                input = "r";
+            }
 
             switch (input)
             {
                 case "r":
                     Game.Dispose();
-                    Game = new Game();
-                    Game._running = 0;
+                    Game = new Game
+                    {
+                        _running = 0
+                    };
                     break;
                 case "d":
                     Game.player.Shield();
