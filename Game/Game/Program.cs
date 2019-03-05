@@ -5,13 +5,16 @@ namespace Game
     class MainClass
     {
         private static Game Game;
-        private static bool gameLive = false;
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("New game. Press ENTER to launch!");
-            Handle(Console.ReadKey());
-            while (gameLive)
+            //Hide cursor
+            Console.CursorVisible = false;
+
+            //Init game
+            Game = new Game();
+
+            while (true)
             {
                 Handle(Console.ReadKey());
             }
@@ -20,6 +23,14 @@ namespace Game
         //Handle key input
         private static void Handle(ConsoleKeyInfo cki)
         {
+            //Start game on any key input
+            if(Game._running == -1)
+            {
+                Game._running = 0;
+                return;
+            }
+
+            //Parse & handle key input
             String input = cki.Key.ToString().ToLower();
 
             switch (input)
@@ -27,20 +38,13 @@ namespace Game
                 case "r":
                     Game.Dispose();
                     Game = new Game();
+                    Game._running = 0;
                     break;
                 case "d":
                     Game.player.Shield();
                     break;
                 case "spacebar":
                     Game.player.Jump();
-                    break;
-                case "enter":
-                    if (!gameLive)
-                    {
-                        gameLive = true;
-                        Game = new Game();
-                        break;
-                    }
                     break;
             }
         }

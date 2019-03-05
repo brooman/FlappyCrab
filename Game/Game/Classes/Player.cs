@@ -35,11 +35,19 @@ namespace Game.Classes
 
         public bool Update()
         {
-            if(this.YPos >= Console.WindowHeight)
+            //Regenerate shield charge
+            if (!this.Shielded)
+            {
+                this.ShieldCharge++;
+            }
+
+            //Check if we hit ground
+            if (this.YPos >= Console.WindowHeight)
             {
                 return false;
             }
 
+            //Gravity
             this.YPos += 1;
 
             return true;
