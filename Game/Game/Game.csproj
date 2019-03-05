@@ -34,6 +34,10 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Figgle">
+      <HintPath>..\packages\Figgle.0.3.0\lib\net45\Figgle.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -42,6 +46,7 @@
     <Compile Include="Classes\Pillar.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Tests\NUnitTestClass.cs" />
+    <Compile Include="Crab.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\" />

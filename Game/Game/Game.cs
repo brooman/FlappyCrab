@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Media;
 using System.Reflection;
+using Figgle;
 
 namespace Game
 {
@@ -84,17 +85,41 @@ namespace Game
             switch (this._running)
             {
                 case -1:
-                    Console.WriteLine("Press any key to start");
+                    gameloop.Enabled = false;
+                    Console.Clear();
+
+                    Crab.Print();
+
+                    Console.WriteLine(
+                        FiggleFonts.Ogre.Render("Floppy Crab")
+                    );
+                    Console.WriteLine(
+                        FiggleFonts.Ogre.Render("Press any key to start")
+                    );
+
+                    Crab.Print();
                     break;
                 case 0:
+                    gameloop.Enabled = true;
                     this.Update();
                     this.Draw();
                     break;
                 case 1:
+                    gameloop.Enabled = false;
                     Console.Clear();
-                    Console.WriteLine("\ud83e\udd80 Gameover \ud83e\udd80");
-                    Console.WriteLine($"Your score was {this.score}");
-                    Console.WriteLine("Press R to play again");
+                    Crab.Print();
+
+                    Console.WriteLine(
+                        FiggleFonts.Ogre.Render("Gameover")
+                    );
+                    Console.WriteLine(
+                        FiggleFonts.Ogre.Render($"Your score was {this.score}")
+                    );
+                    Console.WriteLine(
+                        FiggleFonts.Ogre.Render("Press R to play again")
+                    );
+
+                    Crab.Print();
                     break;
             }
         }
